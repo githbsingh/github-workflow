@@ -1,0 +1,378 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <script type="text/javascript" src="js/jquery.min.js"></script>
+    <script type="text/javascript" src="js/jquery.validate.min.js"></script>
+    <script type="text/javascript" src="js/jquery-ui.js"></script>
+    <script type="text/javascript" src="js/notify.js"></script>
+    <script type="text/javascript" src="js/notify.min.js"></script>
+    <script type="text/javascript" src="js/main.js"></script>
+    <script src="js/postrequest.js"></script>
+    <script src="js/getUserInfo.js"></script>
+    <script src="js/gsc-post-request.js"></script>
+    <title>User Profile Management</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <link href="css/jquery-ui.css" rel="stylesheet" type="text/css">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet"/>
+    <!-- Tooltips  -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+    <!-- Latest v2.x.x -->
+    <script src="https://cdn.jsdelivr.net/npm/css-vars-ponyfill@2"></script>   
+
+    <link href="css/general.css" rel="stylesheet" type="text/css">
+
+</head>
+<body>
+    <div class="container">
+
+		 <div class="um--header-container">
+		    <img src="images/User_Profile_Banner.jpg"  class="um--header-image" >		     
+		 </div>
+		 <div> <h6 class="font-weight-bold p-2">USER PROFILE MANAGEMENT</h6></div>
+		
+        <!-- Search User -->
+       
+        <div class="um--container1 um--gapBottom">
+            <form name='search' id='search' data-th-action="@{/getUserProfile}" data-th-object="${userProfileForm}" method='POST'>
+                <!-- <input type="hidden" name="action" value="getProfile"> -->
+                <fieldset>
+                    <legend>Search User</legend>
+                    <div class="row">
+                        <div class="col-sm-4 form-label-group">
+                            <input id="userName" name="userName" class="um--inputText" type="text"  th:field="*{userName}" data-rule-required="true" data-msg-required="Required field" required="required" />
+                            <label for="userName" class="floating-label text-info" >Enter User Name (min 3 characters)</label>                            
+                        </div>
+                        <div class="col-sm-4 form-label-group">
+                            <input id="userPin" name="userPin" class="um--inputText" type="text"  th:field="*{userPin}" data-rule-required="true" data-msg-required="Required field" required="required" />
+                            <label for="userPin" class="floating-label text-info" >Enter User PIN (min 3 characters)</label>
+                        </div>
+                        <div class="col-sm-4">
+                            <button type="submit" id="submit-getProfile" name="action" class="um--animated-button um--inputButton" value="getProfile"><i class="fa-user-o user-o"></i><i class="search-plus fa-search-plus overlay-user-search"></i>&nbsp;Get Profile</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                      <div class="col-sm-12"> 
+                        <label id="usersearch-error" class="error" for="usersearch"></label>
+                      </div>
+                    </div>                   
+                </fieldset>
+            </form>
+        </div>
+        <div id="um--spinner" align="center">
+            <img src="images/lazy-preloader-clear_bak.gif" alt="">
+        </div>
+        <!-- User Profile Information -->
+        <div class="um--container2 um--gapBottom">
+            <form data-th-object="${userProfileForm}" method="post" id="userProfileFormId" >
+                <input type="hidden" th:value="${userProfileInfo.userPin}" name="hiddenUserPinInfo" id="hiddenUserPinInfo" />
+                <fieldset>
+                    <legend>Employee Information</legend>
+                    <div class="row" >                    
+                     <div class="col-xl-4 col-md-4">
+	                    <div class="um--table-cell  panel-body">
+	                     <span class="um-profileInfoLeftCell text-info">User PIN: </span>
+	                     <p class="um-profileInfoRightCell js-userID" th:utext="${userProfileInfo.userPin}" id="userProfileInfo-userPin"></p>
+	                    </div>
+                     </div>
+                     <div class="col-xl-4 col-md-4">
+                        <div class="um--table-cell   ">
+	                      <span class="um-profileInfoLeftCell text-info">First Name: </span>
+	                      <p class="um-profileInfoRightCell js-firstName" th:utext="${userProfileInfo.firstName}" id="userProfileInfo-firstName" ></p>
+	                    </div>                                              
+                     </div>
+                     <div class="col-xl-4 col-md-4">
+	                     <div class="um--table-cell   ">
+		                     <span class="um-profileInfoLeftCell text-info">Last Name: </span>
+		                     <p class="um-profileInfoRightCell js-lastName" th:utext="${userProfileInfo.lastName}" id="userProfileInfo-lastName" ></p>
+		                  </div>
+                     </div>
+                     <div class="col-xl-4 col-md-4"> 
+	                     <div class="um--table-cell   ">
+		                     <span class="um-profileInfoLeftCell text-info">Division: </span>
+		                     <p class="um-profileInfoRightCell js-primaryDivision" th:utext="${userProfileInfo.primaryDivision}" id="userProfileInfo-primaryDivision" ></p>
+		                 </div>                      
+                     </div>
+                     <div class="col-xl-4 col-md-4">
+                        <div class="um--table-cell   ">
+                            <span class="um-profileInfoLeftCell text-info">Job Description: </span>
+                            <p class="um-profileInfoRightCell js-jobDesc" th:utext="${userProfileInfo.jobDescription}" id="userProfileInfo-jobDescription" ></p>
+                        </div>
+                     </div>
+                     <div class="col-xl-4 col-md-4">
+                          <div class="um--table-cell   ">
+		                     <span class="um-profileInfoLeftCell text-info">Email: </span>
+		                     <p class="um-profileInfoRightCell js-email" th:utext="${userProfileInfo.emailAddress}" id="userProfileInfo-emailAddress"></p>
+                          </div>                                            
+                     </div>
+                     <div class="col-xl-4 col-md-4">
+                       <div class="um--table-cell   ">
+	                       <span class="um-profileInfoLeftCell text-info">Country: </span>
+	                       <p class="um-profileInfoRightCell js-primaryCountry" th:utext="${userProfileInfo.primaryCountry}" id="userProfileInfo-primaryCountry" ></p>
+	                   </div>
+                     </div>
+                     <div class="col-xl-4 col-md-4">
+                       <div class="um--table-cell   ">
+	                       <span class="um-profileInfoLeftCell text-info">Role:</span>
+	                       <p class="um-profileInfoRightCell">
+					      			<select id="js-assignRole" name="js-assignRole" class="um--selectBox" th:field="${userProfileInfo.userRole}">
+					      				<!-- <option selected disabled value="">Assign Role</option> -->
+					      				<option th:each="roleName : ${availableRoleList}"
+					      				th:value="${roleName}"
+										th:utext="${roleName}" 
+										th:selected="${roleName == ${userProfileInfo.userRole}}"/>
+					      			</select>
+					      			&nbsp;&nbsp;				      			
+				      		</p>
+                       </div>  
+                     </div>
+                     <div class="col-xl-4 col-md-4">
+                        <div class="um--table-cell">
+                             <span class="um-profileInfoLeftCell text-info">Click here to change Role:</span>
+	                         <p class="um-profileInfoRightCell" align="left" ><button type="submit" id="submit-assignRoleUpdate" name="submit-assignRoleUpdate" class="um--updateButton notify-roleUpdateResult btn edit btn-danger" disabled="disabled">Modify Role</button>
+	                         </p>
+                         </div>
+                     </div>
+                   </div>
+                </fieldset>
+            </form>
+        </div>
+        
+        <!-- Add / Remove List -->
+        <div class="um--container3 um--gapTop um--gapBottom">
+            <form name='userProfileForm' action="#" data-th-action="@{/action/edit}" data-th-object="${userProfileForm}" method="post">
+                <input type="hidden" th:value="${userProfileInfo.userPin}" name="hiddenUserPin" id="hiddenUserPin" />
+                <input type="hidden" name="activeTab" id="activeTab" />
+                <fieldset>  
+                <legend>Profile Values</legend>
+                <div id="accordion" class="accordion">
+				    <div class="card">
+					      <div class="card-header text-primary" data-toggle="collapse" href="#collapseOne">
+					        <a class="card-title"> Division  <i class="fa fa-chevron-down float-right"></i></a>					       
+					      </div>
+					      <div id="collapseOne" class="collapse show" data-parent="#accordion">
+					        <div class="card-body">
+			                    <div class="row align-items-center">
+					                <div class="col-sm-5" >
+					                 <span class="um--label">Available Division(s): </span>
+				                        <select id="js-addDivision" name="js-addDivision" class="um--selectBox um--multiSelect" th:field="*{divId}" size="8">
+				                            <!-- <option th:each="focusDiv : ${focusDivList}" th:value="${focusDiv.focusDivId}" th:utext="${focusDiv.focusDivisionName}"/> -->
+				                         </select>
+				                    </div>
+				                 	<div class="col-sm-2 p-3 text-center">                               	
+				                        <button type="submit" id="submit-addListDivision" data-button="listDivision" class="um--addButton" name="action" value="add" title="Add Division"><span> <i class="fa-plus-circle plus-btn plus-circle"></i>Division</span></button>
+				                        <br>
+				                        <br>
+				                        <button type="submit" id="submit-removeListDivision" data-button="listDivision" class="um--removeButton notify-division-result" name="action" value="delete" title="Remove Division"><span> <i class="fa-minus-circle minus-btn minus-circle"></i>Division</span></button>
+				                        
+				                    </div>
+				                    <div class="col-sm-5 ">
+				                      <span class="um--label">Chosen Division(s): </span>
+				                        <select id="js-listDivision" name="js-listDivision" class="um--selectBox um--multiSelect" size="8" th:field="*{userDivId}">
+				                            <option th:each="userDiv : ${userDivList}" th:value="${userDiv.focusDivId}" th:utext="${userDiv.focusDivisionName}"  />
+				                        </select>
+				                    </div>	
+			                    </div>
+					        </div>
+					      </div>
+				     </div>
+				     <div class="card">
+					     <div class="card-header text-primary collapsed" data-toggle="collapse" href="#collapseTwo">
+					        <a class="card-title"> Market Vertical <i class="fa fa-chevron-down float-right"></i></a>					       
+					      </div>
+					      <div id="collapseTwo" class="collapse" data-parent="#accordion">
+					        <div class="card-body">						        
+			                    <div class="row align-items-center">
+						                <div class="col-sm-5 ">
+						                    <div class="row">
+							                    <div class="col-sm-6 col-6 col-xl-12 col-lg-12 col-md-12">
+								                    <span class="um--label">Available Market Vertical Level(s) 1: </span><span class="js-showTooltip js-showTooltipLeft" rel="tooltip" data-title="Please select atleast one Level 1 and Level 2 to assign."><i class="fa-question-circle-o question-circle-o"></i></span>
+								                    <select id="js-addMarketVertical" name="js-addMarketVertical" class="um--selectBox um--multiSelectDynamic" th:field="*{mrktVrtLvl1Id}" size="6">
+								                    </select>
+							                    </div>
+							                    <div class="col-sm-6 col-6 col-xl-12 col-lg-12 col-md-12">
+								                    <span class="um--label">Available Market Vertical Level(s) 2: </span><span class="d-md-none">&nbsp;</span>
+								                    <select id="js-addMarketVerticalLvl2" name="js-addMarketVerticalLvl2" class="um--selectBox um--multiSelectDynamic" th:field="*{userMrktVrtLvl1Id}" size="6">
+								                    </select>
+							                    </div>
+						                    </div>
+						                </div>
+						             	<div class="col-sm-2 p-3 text-center">    
+						                    <button type="submit" id="submit-addListMarketVertical" data-button="listMarketVertical" class="um--addButton" name="action" value="add" title="Add Market Vertical"><span> <i class="fa-plus-circle plus-btn plus-circle"></i> Market Vertical</span></button>
+						                    <div class="um--gapTop">&nbsp;</div>
+						                    <button type="submit" id="submit-removeListMarketVertical" data-button="listMarketVertical" class="um--removeButton notify-marketVertical-result" name="action" value="delete" title="Remove Market Vertical"><span> <i class="fa-minus-circle minus-btn minus-circle"></i> Market Vertical</span></button>
+						                    
+						                </div>
+						               <div class="col-sm-5 ">
+						                  <div class="row">
+							                 <div class="col-sm-6 col-6 col-xl-12 col-lg-12 col-md-12">
+									               <span class="um--label">Chosen Market Vertical Level(s) 1: </span>&nbsp;<span class="js-showTooltip js-showTooltipLeft" rel="tooltip" data-title="Please select atleast one Level 1 and Level 2 to remove."><i class="fa-question-circle-o question-circle-o"></i></span>
+								                   <select id="js-listMarketVertical" name="js-listMarketVertical" class="um--selectBox um--multiSelectDynamic" th:field="*{userMrktVrtLvl1Id}" size="6">
+								                   </select>
+								             </div>
+								             <div class="col-sm-6 col-6 col-xl-12 col-lg-12 col-md-12">
+							                   <!--<div class="um--gapTop">&nbsp;</div>-->
+							                   <span class="um--label">Chosen Market Vertical Level(s) 2: </span>
+							                   <select id="js-listMarketVerticalLvl2" name="js-listMarketVerticalLvl2" class="um--selectBox um--multiSelectDynamic" th:field="*{userMrktVrtLvl2Id}" size="6">
+							                   </select>
+							                  </div>
+							                </div>
+						                </div>		
+			                     </div>			                     					          
+					        </div>
+					      </div>
+				    </div> 
+				    <div class="card">
+					  <div class="card-header text-primary collapsed" data-toggle="collapse" href="#collapseThree">
+				        <a class="card-title"> Account <i class="fa fa-chevron-down float-right"></i></a>					       
+				      </div>
+				      <div id="collapseThree" class="collapse" data-parent="#accordion">
+				        <div class="card-body">					        
+		                    <div class="row align-items-center">
+				                <div class="col-sm-5 ">				                   
+							        <span class="um--label">Available Account(s): </span>
+				                    <select id="js-addAccount" name="js-addAccount" class="um--selectBox um--multiSelect" th:field="*{accId}" size="8" >
+				                    	<!-- <option th:each="focusAcc : ${focusAccList}" th:value="${focusAcc.focusAccId}" th:utext="${focusAcc.focusAccountName}" /> -->
+			                        </select>
+				                </div>
+				             	<div class="col-sm-2 p-3 text-center">     
+					             	 <button type="submit" id="submit-addListAccount" data-button="listAccount" class="um--addButton" name="action" value="addAccount" title="Add Account"><span> <i class="fa-plus-circle plus-btn plus-circle"></i> Account </span></button>
+				                     <br>
+				                     <br>
+				                     <button type="submit" id="submit-removeListAccount" data-button="listAccount" class="um--removeButton notify-account-result" name="action" value="deleteAccount" title="Remove Account"><span> <i class="fa-minus-circle minus-btn minus-circle"></i> Account </span></button>
+				                     
+				                </div>
+				               <div class="col-sm-5 ">				                   
+							       <span class="um--label">Chosen Account(s): </span>
+					               <select id="js-listAccount" name="js-listAccount" class="um--selectBox um--multiSelect" size="8" th:field="*{userAccId}">
+				                   <option th:each="userAcc : ${userAccList}" th:value="${userAcc.focusAccId}" th:utext="${userAcc.focusAccountName}" />
+				                   </select>
+				                </div>	
+		                     </div>		                     					          
+				        </div>
+				      </div>
+			        </div>
+				    <div class="card">
+					  <div class="card-header text-primary collapsed" data-toggle="collapse" href="#collapseFour">
+				        <a class="card-title"> GSC Code <i class="fa fa-chevron-down float-right"></i></a>					       
+				      </div>
+					  <div id="collapseFour" class="collapse" data-parent="#accordion">
+				        <div class="card-body pb-5">					        
+		                    <div class="row align-items-end">
+				                <div class="col-sm-5 ">
+				                    <span class="um--label">Available Profit Center(s): </span>
+				                	<select id="js-addPrftCtrCode" name="js-addPrftCtrdivde" class="um--selectBox um--multiSelectDynamic" th:field="*{prftCtrId}" size="6">
+				                    </select>
+				                    <div class="um--gapTop">&nbsp;</div>
+				                    <span class="um--label">Available GSC(s): </span>
+				                    <select id="js-addGSCCode" name="js-addGSCCode" class="um--selectBox um--multiSelectDynamic" size="6" th:field="*{gscId}">
+				                    </select>
+				                </div>
+				             	<div class="col-sm-2 p-3 text-center">    
+				             	  <div class="row">
+				             	   <div class="col-6 col-md-12 pb-5">
+					                <button type="submit" id="submit-addListPrftCtr" name="submit-addListPrftCtr" data-button="listPrftCtr" class="um--addButton" title="Add Profit Center"><span> <i class="fa-plus-circle plus-btn plus-circle"></i> Profit Center </span></button>
+				                    <br><br>
+				                    <button type="submit" id="submit-removeListPrftCtr" name="submit-removeListPrftCtr" data-button="listPrftCtr" class="um--removeButton" title="Remove Profit Center"><span> <i class="fa-minus-circle minus-btn minus-circle"></i> Profit Center</span></button>
+				                   </div>
+				                   <div class="col-6 col-md-12">				                  
+				                    <button type="submit" id="submit-addListGSCCode" name="submit-addListGSCCode" data-button="listGSCCode" class="um--addButton" title="Add GSC Code"><span> <i class="fa-plus-circle plus-btn plus-circle"></i> GSC Code </span></button>
+				                    <br><br>
+				                    <button type="submit" id="submit-removeListGSCCode" name="submit-removeListGSCCode" data-button="listGSCCode" class="um--removeButton notify-GSC-result" title="Remove GSC Code"><span>  <i class="fa-minus-circle minus-btn minus-circle"></i> GSC Code </span></button>
+				                   </div>
+				                  </div>  
+				                </div>
+				               <div class="col-sm-5 ">
+					               <span class="um--label">Chosen Profit Center(s): </span>
+				               	   <select id="js-listPrftCtrCode" name="js-listPrftCtrCode" class="um--selectBox um--multiSelectDynamic" th:field="*{userPrftCtrId}" size="6">
+				                   </select>
+				                   <div class="um--gapTop">&nbsp;</div>
+				                   <span class="um--label">Chosen GSC(s): </span>
+				                   <select id="js-listGSCCode" name="js-listGSCCode" class="um--selectBox um--multiSelectDynamic" th:field="*{userGscId}" size="6">
+				                   </select>
+				                </div>
+		                     </div>				          
+				        </div>
+				      </div>
+			        </div>
+				    <div class="card">
+					  <div class="card-header text-primary collapsed" data-toggle="collapse" href="#collapseFive">
+				        <a class="card-title">Country<i class="fa fa-chevron-down float-right"></i></a>					       
+				      </div>
+				      <div id="collapseFive" class="collapse" data-parent="#accordion">
+				        <div class="card-body">
+					        
+		                    <div class="row align-items-center">
+					                <div class="col-sm-5 ">					                    
+				                        <span class="um--label">Available Country(s): </span>
+					                    <select id="js-addCountry" name="js-addCountry" class="um--selectBox um--multiSelect" th:field="*{ctryId}" size="8">
+				                        <!-- <option th:each="focusCtry : ${focusCtryList}" th:value="${focusCtry.focusCtryId}" th:utext="${focusCtry.focusCountryName}" /> -->
+				                        </select>
+					                </div>
+					             	<div class="col-sm-2 p-3 text-center">     
+						             	<button type="submit" id="submit-addListCountry" data-button="listCountry" class="um--addButton" name="action" value="addCountry" title="Add Country"><span> <i class="fa-plus-circle plus-btn plus-circle"></i> Country </span></button>
+					                    <br>
+					                    <br>
+					                    <button type="submit" id="submit-removeListCountry" data-button="listCountry" class="um--removeButton notify-country-result" name="action" value="deleteCountry" title="Remove Country"><span> <i class="fa-minus-circle minus-btn minus-circle"></i> Country </span></button>
+					                  
+					                </div>
+					               <div class="col-sm-5 ">					                
+				                       <span class="um--label">Chosen Country(s): </span>
+						               <select id="js-listCountry" name="js-listCountry" class="um--selectBox um--multiSelect" size="8" th:field="*{userCtryId}">
+					                   <option th:each="userCtry : ${userCtryList}" th:value="${userCtry.focusCtryId}" th:utext="${userCtry.focusCountryName}" />
+					                   </select>
+					                </div>
+		                     </div>		                     					          
+				        </div>
+				      </div>
+			        </div>
+				    <div class="card">
+					  <div class="card-header text-primary collapsed" data-toggle="collapse" href="#collapseSix">
+				        <a class="card-title"> Technology Platform<i class="fa fa-chevron-down float-right"></i></a>					       
+				      </div>
+					  <div id="collapseSix" class="collapse" data-parent="#accordion">
+				        <div class="card-body">					        
+		                    <div class="row align-items-center">
+				                <div class="col-sm-5 ">				                
+				                   <span class="um--label">Available Technology Platform(s): </span>
+					                <select id="js-addTechnology" name="js-addTechnology" class="um--selectBox um--multiSelect" size="8" th:field="*{techId}">
+				                    <!-- <option th:each="focusTech : ${focusTechList}" th:value="${focusTech.focusTechId}" th:utext="${focusTech.focusTechnologyName}" /> -->
+				                    </select>
+				                </div>
+				             	<div class="col-sm-2 p-3 text-center">     
+					             	<button type="submit" id="submit-addListTechnology" data-button="listTechnology" class="um--addButton" name="action" value="addTech" title="Add Technology"><span> <i class="fa-plus-circle plus-btn plus-circle"></i> Technology </span></button>
+				                    <br>
+				                    <br>
+				                    <button type="submit" id="submit-removeListTechnology" data-button="listTechnology" class="um--removeButton notify-technology-result" name="action" value="deleteTech" title="Remove Technology"><span> <i class="fa-minus-circle minus-btn minus-circle"></i> Technology </span></button>
+				                    
+				                </div>
+				               <div class="col-sm-5 ">				               
+				                   <span class="um--label">Chosen Technology Platform(s): </span>
+					               <select id="js-listTechnology" name="js-listTechnology" class="um--selectBox um--multiSelect" size="8" th:field="*{userTechId}">
+				                   <option th:each="userTech : ${userTechList}" th:value="${userTech.focusTechId}" th:utext="${userTech.focusTechnologyName}" />
+				                   </select>
+				                </div>
+		                     </div>				          
+				        </div>
+				      </div>
+			        </div>
+			    
+			                 
+                </div>            
+               </fieldset>
+            </form>
+        </div>
+        <!-- Footer -->
+        <div class="um--footer">
+          <p>© 3M <span class="js-copyYear"></span>. All Rights Reserved.</p>
+        </div>
+    </div>
+	<script type="text/javascript">
+	</script>
+</body>
+
+</html>

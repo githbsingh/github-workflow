@@ -1,0 +1,34 @@
+1)	Copy  db2jcc4.jar, module.xml and db2jcc_license_cisuz.jar to /jboss/modules/com/db2/jdbc/main
+	a.	This needs to be done on every server in the cluster
+2)	Run the JBOSS command line but do not connect
+	a.	sudo /jboss/bin/jboss-cli.sh
+
+3)	Add the Module to the profile (JBOSS Domain Controller Only)
+	a.	Type “connect” to connect to the controller
+	b.	/profile=ha-101_202-int/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-303_404-int/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-505_606-int/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-707_808-int/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-909_110-int/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-111_112-int/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-113_114-int/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-101_202-ext/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-303_404-ext/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+		/profile=ha-505_606-ext/subsystem=datasources/jdbc-driver=db2-xa:add(driver-module-name=com.db2.jdbc,driver-xa-datasource-class-name=com.ibm.db2.jcc.DB2XADataSource,driver-name=db2-xa)
+
+	
+Remove Data
+	/profile=ha/subsystem=datasources/jdbc-driver=db2:remove
+	
+Remove Module
+	module remove --name=db2.jdbc
+	
+Register Module (You may need to register)
+1)	Register the Module (On All servers in the Cluster)
+	a.	module add --name=com.db2.jdbc --resources=/usr/local/jboss/jboss-eap-6.1/modules/com/db2/jdbc/main/db2jcc4.jar --dependencies=javax.api,javax.transaction.api
+	
+	// New
+	module add --name=com.ibm.db2 --resources=/opt/jdbcdrivers/db2/db2jcc4.jar:/opt/jdbcdrivers/db2/db2java.zip --dependencies=javax.api,javax.transaction.api
+	
+Connection String Example
+jdbc:db2://sysr.mmm.com:447/MMMUSDB2DB

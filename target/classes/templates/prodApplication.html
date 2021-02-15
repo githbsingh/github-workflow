@@ -1,0 +1,120 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=yes">
+    <script type="text/javascript" src="../js/jquery.min.js"></script>
+    <script type="text/javascript" src="../js/jquery-ui.js"></script> 
+    <link href="../css/jquery-ui.css" rel="stylesheet" type="text/css">
+    <link href="../css/general.css" rel="stylesheet" type="text/css">    
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
+    <script src="../js/getOpportunityItemInfo.js"></script>
+    <style>
+       body {
+			  font-family: "3MCircular",Arial,"Helvetica Neue",Helvetica,sans-serif;
+			  color: #4b4b4b;
+			  min-width: 320px;
+			  -webkit-tap-highlight-color: transparent;
+			  background-repeat: repeat;
+			  background-image: url('../images/repeating_meshed_grid.png');
+			  min-height: 100%;
+			  position: relative; 
+		}
+		@media only screen and (min-width : 1200px) {		
+               .container { max-width: 710px; } 
+        }
+       .header-image{
+             width: 100%;
+             height: auto;
+       }
+       .um--emailtemplate_main_container {
+			margin: auto;
+		    padding: 0px 25px 0px 25px;
+			overflow: hidden;
+			font-size: 14px;
+			max-width: 710px; 
+		}
+		.um--header_container {
+			 margin: 18px 0 15px 0;
+		}
+		.um--submit_container{
+		     display: flex;
+             justify-content: center;
+        }
+        .um--submitButton {	
+		     font-weight: bold;
+		     padding: 7px 15px 5px 15px;
+		     box-shadow: 5px 5px;
+		     background-color: #00c8e6;
+		     cursor: pointer;
+		     
+       }
+       .um--message{
+           font-weight: bold; 
+           font-size: 18px;
+       }
+       .table_layout{   
+           width:100%;
+           border-collapse: collapse;
+       }
+    </style> 
+</head>
+<body>
+
+
+   <!-- Show header Image -->
+   <div class="um--emailtemplate_main_container  um--submit_container container">
+       <span class ="um--message" th:if="${submissionStatus != null}" th:text="${submissionStatus}"></span>
+       <div th:if=${wrapper!=null}>
+	   <div class="um--header_container">
+	         <img src="..\images\Email_Banner3.jpg" class="header-image">
+	   </div>
+	   <form name='mailbody' id='mailbody' action="#" th:action="@{/emailTemplate/updateProdApplicationFeedback}" th:object="${wrapper}" method="post">
+	    <p>The following are the <b><u>Application Recommendation</u></b> matches with your profile <a th:href="@{${applicationUrl}}">LINK</a></p>  
+	              <div > 
+	                    <table th:each ="prodApplicationForm, stat:*{prodApplicationFormList}" border="1" class="table_layout">
+	                    <tr> <input type="hidden" th:value="${prodApplicationForm.userId}" name="hiddenUserId" id="hiddenUserId" th:field="*{prodApplicationFormList[__${stat.index}__].userId}"/>
+	                    </tr>
+	                    <tr> <input type="hidden" th:value="${prodApplicationForm.applId}" name="hiddenApplId" id="hiddenApplId" th:field="*{prodApplicationFormList[__${stat.index}__].applId}"/>
+	                    </tr>
+	                    <tr>
+	                    <td style="width:28%;" > <span >Application Name </span> </td>
+	                    <td> <a th:href="@{${prodApplicationForm.applHyperLink}}" th:utext="${prodApplicationForm.applName}" ></a></td>
+	                    </tr>
+	                    <tr>
+	                    <td> <span >Amount </span> </td>
+	                    <td th:utext="${prodApplicationForm.optyAmount}" id="optyAmount"></td>
+	                    </tr>
+	                    <tr>
+	                    <td> <span >Division </span> </td>
+	                    <td th:utext="${prodApplicationForm.division}" id="division"></td>
+	                    </tr>
+	                    <tr>
+	                    <td> <span >Relevancy </span> </td>
+	                    <td>
+	                    <span>
+		      			<input type="radio" id="${prodApplicationForm.applId}" name="relevancy" th:field="*{prodApplicationFormList[__${stat.index}__].feedback}" th:value="3" th:utext="High" required="required" >&nbsp;&nbsp;						      				
+		      			<input type="radio" id="${prodApplicationForm.applId}" name="relevancy"  th:field="*{prodApplicationFormList[__${stat.index}__].feedback}" th:value="2" th:utext="Medium" required="required" >&nbsp;&nbsp;
+		      			<input type="radio" id="${prodApplicationForm.applId}" name="relevancy" th:field="*{prodApplicationFormList[__${stat.index}__].feedback}"  th:value="1" th:utext="Low" required="required" >&nbsp;&nbsp;
+		      			<input type="radio" id="${prodApplicationForm.applId}" name="relevancy"  th:field="*{prodApplicationFormList[__${stat.index}__].feedback}" th:value="0" th:utext="NotRelevant" required="required" >		      			      							      			
+		                <!-- <input type="radio" id="${prodApplicationForm.applId}" name="relevancy"  th:field="*{prodApplicationFormList[__${stat.index}__].feedback}" th:value="-2" th:utext="${'Maybe Later'}" >	-->			      							      			
+		                </span> 
+		                </td> 
+		                </tr>
+		                <table style = "border-top: 0px;background-color:#bed7de;" align="center" border="1" class="table_layout">
+		                <tr>
+	                    <td style="text-align:center;"> <a th:href="@{${'https://3m1.lightning.force.com/lightning/page/chatter/record/0F91N000000bmLcSAI'}}" th:utext="${'Contact Primary AE'}" ></a></td>
+	                    </tr>              
+	                    </table>	                
+		                </br>               
+	                   </table>
+	             </div> 
+	             <div class="um--submit_container"> 
+	                    <br/><button type="submit" id="submitRelevancy" name="action" class="um--submitButton" value="submit">Submit</button> 
+	             </div>         
+	      </form>
+	      </div>
+      </div>          
+</body>  
+</html>
